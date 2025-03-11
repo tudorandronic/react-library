@@ -1,8 +1,8 @@
 import React from "react";
 
 export const Navbar = () => {
-    return (
-        <nav className = 'navbar navbar-expand-lg navbar-dark main-color py-3'>
+  return (
+    <nav className='navbar navbar-expand-lg navbar-dark main-color py-3'>
       <div className='container-fluid'>
         <span className='navbar-brand'> Tudor's Library </span>
         <button className='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navBarDropdown'>
@@ -20,12 +20,12 @@ export const Navbar = () => {
           </ul>
           <ul className='navbar-nav ms-auto'>
             <li className='nav-item m-1'>
-              <a  type='button' className='btn btn-outline-light' href='#'>Sign in</a>
+              <a type='button' className='btn btn-outline-light' href='#'>Sign in</a>
             </li>
           </ul>
 
         </div>
       </div>
     </nav>
-    );
+  );
 }
