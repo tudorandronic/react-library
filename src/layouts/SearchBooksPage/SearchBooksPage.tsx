@@ -27,10 +27,11 @@ export const SearchBooksPage = () => {
             }
             const responseJson = await response.json();
             const responseData = responseJson._embedded.books;
+            const loadedBooks: BookModel[] = [];
             setTotalAmountOfBooks(responseJson.page.totalElements);
             setTotalPages(responseJson.page.totalPages);
             for (let book of responseData) {
-                books.push({
+                loadedBooks.push({
                     id: book.id,
                     title: book.title,
                     author: book.author,
@@ -42,7 +43,7 @@ export const SearchBooksPage = () => {
                 });
             }
             setIsLoading(false);
-            setBooks(books);
+            setBooks(loadedBooks);
         }
 
         fetchBooks().catch((error: any) => {
@@ -50,7 +51,8 @@ export const SearchBooksPage = () => {
             setHttpError(error);
         });
 
-    }, []);
+        window.scroll(0,0);
+    }, [currentPage]);
 
     if (isLoading) {
         return (
@@ -110,10 +112,10 @@ export const SearchBooksPage = () => {
                         </div>
                     </div>
                     <div className="mt-3">
-                        Number of results: (22)
+                        Number of results: ({totalAmountOfBooks})
                     </div>
                     <p className="mt-3">
-                        1 to 5 of 22 items:
+                        {indexOfFirstBook+1} to {lastItem} of ({totalAmountOfBooks}) items:
                         {books.map(book => (
                             <SearchBook book={book} key={book.id} />
                         ))}
