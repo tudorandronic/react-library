@@ -16,11 +16,20 @@ export const SearchBooksPage = () => {
     const [booksPerPage, setBooksPerPage] = useState(5);
     const [totalAmountOfBooks, setTotalAmountOfBooks] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    const [search, setSearch] = useState("");
+    const [searchUrl, setSearchUrl] = useState("");
 
     useEffect(() => {
         const fetchBooks = async () => {
             const baseUrl = "http://localhost:8080/api/books";
-            const url = `${baseUrl}?page=${currentPage-1}&size=${booksPerPage}`;
+            let url = "";
+            
+            if(searchUrl === ''){
+                url = `${baseUrl}?page=${currentPage-1}&size=${booksPerPage}`;
+            } else {
+                url = `${baseUrl}${searchUrl}`
+            }
+
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error("Shit happened");
@@ -52,7 +61,7 @@ export const SearchBooksPage = () => {
         });
 
         window.scroll(0,0);
-    }, [currentPage]);
+    }, [currentPage,searchUrl]);
 
     if (isLoading) {
         return (
@@ -68,6 +77,14 @@ export const SearchBooksPage = () => {
         );
     }
 
+    const handleSearchChanged = () => {
+        if(search !== ''){
+            setSearchUrl(`/search/findBookByTitleContaining?title=${search}&page=0&size=${booksPerPage}`);
+        } else {
+            setSearchUrl('');
+        }
+    }
+
     const indexOfLastBook:number = currentPage*booksPerPage;
     const indexOfFirstBook:number = indexOfLastBook-booksPerPage;
     let lastItem:number = booksPerPage <= totalAmountOfBooks ? booksPerPage*currentPage : totalAmountOfBooks;
@@ -80,8 +97,8 @@ export const SearchBooksPage = () => {
                     <div className="row mt-5">
                         <div className="col-6">
                             <div className="d-flex me-5">
-                                <input className="form-control me-2" type="search" placeholder="Search" aria-labelledby="Search" />
-                                <button className="btn btn-outline-success">
+                                <input className="form-control me-2" type="search" placeholder="Search" aria-labelledby="Search" onChange={(e) => setSearch(e.target.value)}/>
+                                <button className="btn btn-outline-success" onClick={handleSearchChanged}>
                                     Search
                                 </button>
                             </div>
