@@ -28,7 +28,8 @@ export const SearchBooksPage = () => {
                 if (searchUrl === '') {
                     url = `${baseUrl}?page=${currentPage - 1}&size=${booksPerPage}`;
                 } else {
-                    url = `${baseUrl}${searchUrl}`
+                    let searchUrlWithPage = searchUrl.replace("<pageNumber>", `${currentPage - 1}`);
+                    url = `${baseUrl}${searchUrlWithPage}`;
                 }
             
 
@@ -80,20 +81,22 @@ export const SearchBooksPage = () => {
     }
 
     const handleSearchChanged = () => {
+        setCurrentPage(1);
         if (search !== '') {
-            setSearchUrl(`/search/findBookByTitleContaining?title=${search}&page=0&size=${booksPerPage}`);
+            setSearchUrl(`/search/findBookByTitleContaining?title=${search}&page=<pageNumber>&size=${booksPerPage}`);
         } else {
             setSearchUrl('');
         }
+        setCategorySelection('Book category');
     }
 
     const categoryField = (value: string) => {
         if(value.toLowerCase() === 'fe' || value.toLowerCase() === 'be' || value.toLowerCase() === 'data' || value.toLowerCase() === 'devops'){
             setCategorySelection(value);
-            setSearchUrl(`/search/findBookByCategoryContaining?category=${value}&page=0&size=${booksPerPage}`)
+            setSearchUrl(`/search/findBookByCategoryContaining?category=${value}&page=<pageNumber>&size=${booksPerPage}`)
         } else {
             setCategorySelection('All');
-            setSearchUrl(`?page=0&size=${booksPerPage}`);
+            setSearchUrl(`?page=<pageNumber>&size=${booksPerPage}`);
         }
     }
 
