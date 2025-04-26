@@ -5,30 +5,31 @@ import BookModel from "../../models/BookModel";
 import { ReturnBook } from "../HomePage/components/ReturnBook";
 import { SpinnerLoading } from "../utils/SpinnerLoading";
 import { StarReview } from "../utils/StarReview";
+import { CheckoutAndReview } from "./CheckoutAndReview";
 
 export const BookCheckoutPage = () => {
     const [book, setBook] = useState<BookModel>();
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState(null);
-    
+
     const bookId = (window.location.pathname).split("/")[2];
 
     useEffect(() => {
         const fetchBooks = async () => {
-            const baseUrl:string = `http://localhost:8080/api/books/${bookId}`;
+            const baseUrl: string = `http://localhost:8080/api/books/${bookId}`;
             const response = await fetch(baseUrl);
-            if(!response.ok)
+            if (!response.ok)
                 throw new Error("Something has not run ok");
             const responseJson = await response.json();
-            const loadedBook:BookModel = {
-                    id: responseJson.id,
-                    title: responseJson.title,
-                    author: responseJson.author,
-                    description: responseJson.description,
-                    copies: responseJson.copies,
-                    copiesAvailable: responseJson.copiesAvailable,
-                    category: responseJson.category,
-                    img: responseJson.img
+            const loadedBook: BookModel = {
+                id: responseJson.id,
+                title: responseJson.title,
+                author: responseJson.author,
+                description: responseJson.description,
+                copies: responseJson.copies,
+                copiesAvailable: responseJson.copiesAvailable,
+                category: responseJson.category,
+                img: responseJson.img
             };
 
             setIsLoading(false);
@@ -42,29 +43,29 @@ export const BookCheckoutPage = () => {
 
     }, []);
 
-    
-        if(isLoading){
-            return (
-                <SpinnerLoading/>
-            );
-        }
-    
-        if(httpError){
-            return (
-                <div className="container mt-5">
-                    <p>{httpError}</p>
-                </div>
-            );
-        }
+
+    if (isLoading) {
+        return (
+            <SpinnerLoading />
+        );
+    }
+
+    if (httpError) {
+        return (
+            <div className="container mt-5">
+                <p>{httpError}</p>
+            </div>
+        );
+    }
 
     return (
         <div>
             <div className="container d-none d-lg-block">
                 <div className="row mt-5">
                     <div className="col-sm-2 col-md-2">
-                        {book?.img ? 
+                        {book?.img ?
                             <img className="mt-5" src={book.img} width="226" height="349" alt="book" />
-                            : 
+                            :
                             <img className="mt-5" src={require("./../../images/BooksImages/book-luv2code-1000.png")} width="226" height="349" alt="book" />
                         }
                     </div>
@@ -72,29 +73,32 @@ export const BookCheckoutPage = () => {
                         <h2>{book?.title}</h2>
                         <h5 className="text-primary">{book?.author}</h5>
                         <p>{book?.description}</p>
-                        <StarReview rating={4} size={32}/>
+                        <StarReview rating={4} size={32} />
                     </div>
+                    <CheckoutAndReview book={book} mobile={false} />
                 </div>
-                <hr/>
+                <hr />
             </div>
             <div className="container d-lg-none">
                 <div className="d-flex justify-content-center align-items-center mt-5">
                     <div>
-                        {book?.img ? 
+                        {book?.img ?
                             <img className="mt-5" src={book.img} width="226" height="349" alt="book" />
-                            : 
+                            :
                             <img className="mt-5" src={require("./../../images/BooksImages/book-luv2code-1000.png")} width="226" height="349" alt="book" />
                         }
                     </div>
                 </div>
                 <div className="mt-2">
-                        <h2>{book?.title}</h2>
-                        <h5 className="text-primary">{book?.author}</h5>
-                        <p>{book?.description}</p>
-                    </div>
-                <hr/>
+                    <h2>{book?.title}</h2>
+                    <h5 className="text-primary">{book?.author}</h5>
+                    <p>{book?.description}</p>
+                    <StarReview rating={4.5} size={32} />
+                </div>
+                <CheckoutAndReview book={book} mobile={true} />
+                <hr />
             </div>
-            
+
         </div>
     );
 }
